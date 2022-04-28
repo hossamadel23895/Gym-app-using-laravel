@@ -6,6 +6,6 @@
     </a>
     <a href="/dashboard" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
         <i class="nav-icon fas fa-dashboard"></i>
-        <p>City Managers</p>
+        <p>Coaches</p>
     </a>
 </li>
