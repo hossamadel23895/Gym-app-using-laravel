@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -26,25 +27,38 @@ class AuthController extends Controller
 
         event(new Registered($user));
 
-        $accessToken = $user->createToken('authToken')->accessToken;
+        $accessToken = $user->createToken('MyApp')->plainTextToken;
 
         return response(['user' => $user, 'access_token' => $accessToken]);
     }
 
+    // public function login(Request $request)
+    // {
+    //     $loginData = $request->validate([
+    //         'email' => 'email|required',
+    //         'password' => 'required'
+
+    //     ]);
+
+    //     if (!auth()->attempt($loginData)) {
+    //         return response(['message' => 'Invalid Credentials']);
+    //     }
+
+    //     $accessToken = auth()->user()->createToken('authToken')->accessToken;
+
+    //     return response(['user' => auth()->user(), 'access_token' => $accessToken]);
+    // }
     public function login(Request $request)
     {
-        $loginData = $request->validate([
-            'email' => 'email|required',
-            'password' => 'required'
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::user();
+            $success['token'] =  $user->createToken('MyApp')->plainTextToken;
+            $success['name'] =  $user->name;
 
-        ]);
-
-        if (!auth()->attempt($loginData)) {
+            //  return $this->sendResponse($success, 'User login successfully.');
+            return response(['user' => $user, 'access_token' => $success['token']]);
+        } else {
             return response(['message' => 'Invalid Credentials']);
         }
-
-        $accessToken = auth()->user()->createToken('authToken')->accessToken;
-
-        return response(['user' => auth()->user(), 'access_token' => $accessToken]);
     }
 }

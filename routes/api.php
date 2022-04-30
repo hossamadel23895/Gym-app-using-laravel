@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\EmailVerificationController;
 use App\Http\Controllers\Api\NewPasswordController;
+use App\Http\Controllers\Api\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +18,7 @@ use App\Http\Controllers\Api\NewPasswordController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-[PagesController::class, 'index'];
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -30,4 +31,4 @@ Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkE
 Route::get('/password/reset', [ResetPasswordController::class, 'reset']);
 
 Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
-Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::get('/email/verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');

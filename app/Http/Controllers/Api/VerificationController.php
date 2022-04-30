@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Verified;
@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class VerificationController extends Controller
 {
@@ -59,24 +60,23 @@ class VerificationController extends Controller
                     ? new JsonResponse([], 202)
                     : back()->with('resent', true);
     }
-    public function verify(Request $request)
+    public function verify($id, Request $request)
     {
-        if (! hash_equals((string) $request->route('id'), (string) $request->user()->getKey())) {
+        $user=User::find($id);
+        if (! hash_equals((string) $request->route('id'), (string) $user->getKey())) {
             throw new AuthorizationException;
         }
 
-        if (! hash_equals((string) $request->route('hash'), sha1($request->user()->getEmailForVerification()))) {
-            throw new AuthorizationException;
-        }
 
-        if ($request->user()->hasVerifiedEmail()) {
+        // dd($request->all(), $id, $request->user(), $user->getKey());
+        if ($user->hasVerifiedEmail()) {
             return $request->wantsJson()
                         ? new JsonResponse([], 204)
                         : redirect($this->redirectPath());
         }
 
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
         }
 
         if ($response = $this->verified($request)) {
