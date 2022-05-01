@@ -16,22 +16,8 @@ class ProfileController extends Controller
     {
         $validator = Validator::make($request->all(), [
 
-            'name' => 'required|min:2|max:55',
-
-         //  'email' => 'required|email|max:255|unique:users,email,' . $this->route()->users->id . ',id',
-          //  'email' => 'required|email|max:255|unique:users,email,'.Auth::User()->id.',id',
-          'email' => 'required',
-         // 'email' => ['required', Rule::unique('users')->ignore($user->id)],
-        //  'email' => [
-            // 'email' => [
-            //     'required',
-            //     Rule::unique('users')->ignore($user->id),
-            // ],
-
-            'password' => 'required|min:6|max:100',
-            'gender'=>'required',
-            'password_confirmation'=>'required',
-            'date_of_birth'=>'required',
+            'name' => 'min:2|max:55',
+            'email' => 'unique:users,email,'.$user->id,
             'profile_image'=>'nullable|image|mimes:jpg,bmp,png'
         ]);
         if ($validator->fails()) {
@@ -42,7 +28,7 @@ class ProfileController extends Controller
         }
 
         $user=$request->user();
-
+        $allData=$request->all();
         if ($request->hasFile('profile_image')) {
             if ($user->profile_image) {
                 $old_path=public_path().'/uploads/profile_images/'.$user->profile_image;
@@ -52,22 +38,16 @@ class ProfileController extends Controller
             }
 
             $image_name='profile_image-'.time().'.'.$request->profile_image->extension();
+            $allData['profile_image']=$image_name;
             $request->profile_image->move(public_path('/uploads/profile_images'), $image_name);
         } else {
             $image_name=$user->profile_image;
+            $allData['profile_image']=$image_name;
         }
 
 
-        $user->update([
-            'name' => $request->name,
 
-            'email' =>  $request->email,
-'password' => bcrypt($request->password),
-            'gender'=> $request->gender,
-            'password_confirmation'=> bcrypt($request->password_confirmation),
-            'date_of_birth'=>$request->date_of_birth,
-            'profile_image'=>$image_name
-        ]);
+        $user->update($allData);
 
         return response()->json([
             'message'=>'Profile successfully updated',

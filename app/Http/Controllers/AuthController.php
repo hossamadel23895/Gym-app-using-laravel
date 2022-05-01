@@ -38,6 +38,8 @@ class AuthController extends Controller
             $user = Auth::user();
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
             $success['name'] =  $user->name;
+            $user->last_login = date('Y-m-d H:i:s');
+            $user->save();
 
             //  return $this->sendResponse($success, 'User login successfully.');
             return response(['user' => $user, 'access_token' => $success['token']]);
