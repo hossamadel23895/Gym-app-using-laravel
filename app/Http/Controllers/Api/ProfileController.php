@@ -4,21 +4,30 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\RedirectResponse;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Hash;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    public function update_profile(Request $request)
+    public function update_profile(Request $request, User $user)
     {
         $validator = Validator::make($request->all(), [
+
             'name' => 'required|min:2|max:55',
-            'email' => 'email|required|unique:users',
+
+         //  'email' => 'required|email|max:255|unique:users,email,' . $this->route()->users->id . ',id',
+          //  'email' => 'required|email|max:255|unique:users,email,'.Auth::User()->id.',id',
+          'email' => 'required',
+         // 'email' => ['required', Rule::unique('users')->ignore($user->id)],
+        //  'email' => [
+            // 'email' => [
+            //     'required',
+            //     Rule::unique('users')->ignore($user->id),
+            // ],
+
             'password' => 'required|min:6|max:100',
             'gender'=>'required',
             'password_confirmation'=>'required',
@@ -51,8 +60,9 @@ class ProfileController extends Controller
 
         $user->update([
             'name' => $request->name,
+
             'email' =>  $request->email,
-            'password' => bcrypt($request->password),
+'password' => bcrypt($request->password),
             'gender'=> $request->gender,
             'password_confirmation'=> bcrypt($request->password_confirmation),
             'date_of_birth'=>$request->date_of_birth,
