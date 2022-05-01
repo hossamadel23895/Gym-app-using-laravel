@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\EmailVerificationController;
 use App\Http\Controllers\Api\NewPasswordController;
 use App\Http\Controllers\Api\VerificationController;
+use App\Http\Controllers\Api\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,3 +33,5 @@ Route::get('/password/reset', [ResetPasswordController::class, 'reset']);
 
 Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 Route::get('/email/verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
+
+Route::post('/profile/update-profile', [ProfileController::class, 'update_profile'])->name('update.profile')->middleware('auth:sanctum');

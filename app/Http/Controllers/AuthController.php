@@ -18,7 +18,7 @@ class AuthController extends Controller
             'gender'=>'required',
             'password_confirmation'=>'required',
             'date_of_birth'=>'required',
-          //  'profile_image'=>'required'
+            'profile_image'=>'nullable|image|mimes:jpg,bmp,png'
         ]);
 
         $validatedData['password'] = bcrypt($request->password);
@@ -32,22 +32,6 @@ class AuthController extends Controller
         return response(['user' => $user, 'access_token' => $accessToken]);
     }
 
-    // public function login(Request $request)
-    // {
-    //     $loginData = $request->validate([
-    //         'email' => 'email|required',
-    //         'password' => 'required'
-
-    //     ]);
-
-    //     if (!auth()->attempt($loginData)) {
-    //         return response(['message' => 'Invalid Credentials']);
-    //     }
-
-    //     $accessToken = auth()->user()->createToken('authToken')->accessToken;
-
-    //     return response(['user' => auth()->user(), 'access_token' => $accessToken]);
-    // }
     public function login(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
