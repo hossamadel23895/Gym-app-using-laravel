@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\City;
 use Illuminate\Support\Facades\File;
 use Spatie\Permission\Models\Role;
+use \App\Http\Requests\StoreUserRequest;
 use Datatables;
 
 class CityManagerController extends Controller {
@@ -64,7 +65,7 @@ class CityManagerController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(StoreUserRequest $request) {
         $user_img_path = !empty($request->file('user_img')) ?
             $request->file('user_img')->store('public') :
             "public/default_avatar.png";
@@ -112,7 +113,7 @@ class CityManagerController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $user_id) {
+    public function update(StoreUserRequest $request, $user_id) {
         $user = User::find($user_id);
 
         if (!empty($request->file('user_img'))) {

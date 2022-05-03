@@ -29,8 +29,9 @@
                 </div>
                 <div class="modal-body">
                     <form method="post" id="userForm" name="userForm" class="form-horizontal" enctype="multipart/form-data">
-                        {{-- @csrf --}}
-                        {{-- @method('PUT') --}}
+                        <div class="alert alert-danger print-error-msg" style="display:none">
+                            <ul></ul>
+                        </div>
                         <div class="form-group">
                             <label for="name" class="col-sm-3 control-label">Name</label>
                             <div class="col-sm-12">
@@ -157,6 +158,8 @@
 
             // Create button action.
             $('#createNewUser').click(function() {
+                $(".print-error-msg").css('display', 'none');
+
                 $('#saveBtn').val("create-user");
                 $('#userForm').trigger("reset");
                 $('#modelHeading').html("Add New User");
@@ -165,6 +168,8 @@
 
             // Edit user button action.
             $('body').on('click', '.editUser', function() {
+                $(".print-error-msg").css('display', 'none');
+
                 user_id = $(this).data('id');
                 var name = $(this).parent().siblings()[1].innerHTML;
                 var email = $(this).parent().siblings()[2].innerHTML;
@@ -206,12 +211,16 @@
                     // enctype: 'multipart/form-data',
                     data: myFormData,
                     success: function(data) {
-                        $('#userForm').trigger("reset");
-                        $('#ajaxModel').modal('hide');
-                        $('#cityManagersTable').DataTable().ajax.reload();
+                        if ($.isEmptyObject(data.error)) {
+                            $('#userForm').trigger("reset");
+                            $('#ajaxModel').modal('hide');
+                            $('#cityManagersTable').DataTable().ajax.reload();
+                        } else {
+                            printErrorMsg(data.error);
+                        }
                     },
-                    error: function(error) {
-                        console.log('Error:', error);
+                    error: function(data) {
+                        printErrorMsg(data);
                     }
                 });
                 $('#saveBtn').html('Save Changes');
@@ -255,6 +264,14 @@
                 $('#deleteModel').modal('hide');
             });
         });
+
+        function printErrorMsg(data) {
+            $(".print-error-msg").find("ul").html('');
+            $(".print-error-msg").css('display', 'block');
+            $.each(data.responseJSON.errors, function(key, value) {
+                $(".print-error-msg").find("ul").append('<li>' + value[0] + '</li>');
+            });
+        }
     </script>
 
     <script>
