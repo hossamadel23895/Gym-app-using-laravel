@@ -25,6 +25,8 @@ class User extends Authenticatable
         'password',
         'national_id',
         'avatar_url',
+        'manageable_id',
+        'manageable_type',
     ];
 
     /**
@@ -45,4 +47,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function manageable()
+    {
+        return $this->morphTo();
+    }
 }

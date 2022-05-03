@@ -25,5 +25,6 @@ Auth::routes(['register' => false]);
 Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::resource('city_managers', CityManagerController::class)->middleware('permission:CRUD_city_managers');
+
 Route::resource('gym_managers', GymManagerController::class)->middleware('permission:CRUD_gym_managers');
 

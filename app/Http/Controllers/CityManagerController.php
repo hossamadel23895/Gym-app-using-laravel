@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\City;
+use Illuminate\Support\Facades\File;
+use Spatie\Permission\Models\Role;
+use Datatables;
 
 class CityManagerController extends Controller {
     /**
@@ -11,11 +15,38 @@ class CityManagerController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
-        $city_managers = User::role('city_manager')->get();
-        return view('city_managers.index', [
-            'city_managers' => $city_managers,
-        ]);
+    public function index(Request $request) {
+        if ($request->ajax()) {
+            return Datatables::of(Role::where("name", "city_manager")->first()->users)
+                ->addColumn('avatar', function ($cityManager) {
+                    $user_img_name = explode('/', $cityManager->avatar_url)[1];
+                    $avatar = '<img src="/storage/'
+                        . $user_img_name
+                        . '" alt="avatar" width="30" height="30">';
+                    return $avatar;
+                })
+                ->addColumn('city', function ($cityManager) {
+                    return $cityManager->manageable->name;
+                })
+                ->addColumn('action', function ($cityManager) {
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' .
+                        $cityManager->id .
+                        '" data-original-title="Edit" class="edit btn btn-primary mx-1 btn-sm editUser">Edit</a>';
+
+                    $btn = $btn . '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' .
+                        $cityManager->id .
+                        '" data-original-title="Edit" class="delete btn btn-danger btn-sm mx-1 deleteUser">Delete</a>';
+
+                    return $btn;
+                })
+                ->rawColumns(['avatar', 'action'])
+                ->make(true);
+        } else {
+            $cities = City::all();
+            return view('city_managers.index', [
+                'cities' => $cities,
+            ]);
+        }
     }
 
     /**
@@ -34,7 +65,25 @@ class CityManagerController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        //
+        $user_img_path = !empty($request->file('user_img')) ?
+            $request->file('user_img')->store('public') :
+            "public/default_avatar.png";
+
+        $user = User::Create(
+            [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'national_id' => $request->national_id,
+                'avatar_url' => $user_img_path,
+                'manageable_id' => $request->manageable_id,
+                'manageable_type' => "\App\Models\City",
+            ],
+        );
+
+        $user->assignRole('city_manager');
+
+        return response()->json(['success' => 'User saved successfully.']);
     }
 
     /**
@@ -63,17 +112,36 @@ class CityManagerController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-        //
-    }
+    public function update(Request $request, $user_id) {
+        $user = User::find($user_id);
 
+        if (!empty($request->file('user_img'))) {
+            if ($user->avatar_url != "public/default_avatar.png") File::delete("storage/" . explode('/', $user->avatar_url)[1]);
+            $user_img_path = $request->file('user_img')->store('public');
+        } else {
+            $user_img_path = $user->avatar_url;
+        }
+
+        User::find($user_id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'national_id' => $request->national_id,
+            'avatar_url' => $user_img_path,
+        ]);
+
+        return response()->json(['success' => 'User updated successfully.']);
+    }
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        //
+    public function destroy($user_id) {
+        $user = User::find($user_id);
+        if ($user->avatar_url != "public/default_avatar.png") File::delete("storage/" . explode('/', $user->avatar_url)[1]);
+        $user->delete();
+        return response()->json(['success' => 'User deleted successfully.']);
     }
 }
