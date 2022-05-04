@@ -5,14 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class City extends Model {
+class Package extends Model {
     use HasFactory;
 
     protected $fillable = [
         'name',
+        'price',
+        'sessions_amount',
+        'has_packages_type',
+        'has_packages_id',
     ];
 
-    public function users() {
-        return $this->morphMany('App\User', 'manageable');
+    public function has_packages() {
+        return $this->morphTo();
     }
 }

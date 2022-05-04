@@ -27,6 +27,8 @@ class User extends Authenticatable
         'avatar_url',
         'manageable_id',
         'manageable_type',
+        'gender',
+        'date_of_birth',
     ];
 
     /**
@@ -51,5 +53,18 @@ class User extends Authenticatable
     public function manageable()
     {
         return $this->morphTo();
+    }
+
+    public function sessions()
+    {
+        return $this->belongsToMany(Session::class);
+    }
+
+    public function buys(){
+        return $this->morphMany('App\Purchase', 'buyable');
+    }
+
+    public function sells(){
+        return $this->morphMany('App\Purchase', 'sellable');
     }
 }

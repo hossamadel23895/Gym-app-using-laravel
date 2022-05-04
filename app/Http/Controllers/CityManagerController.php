@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Session;
 use App\Models\City;
 use Illuminate\Support\Facades\File;
 use Spatie\Permission\Models\Role;
 use \App\Http\Requests\StoreUserRequest;
-use Datatables;
+use yajra\Datatables\Datatables;
 
 class CityManagerController extends Controller {
     /**
@@ -18,7 +19,8 @@ class CityManagerController extends Controller {
      */
     public function index(Request $request) {
         if ($request->ajax()) {
-            return Datatables::of(Role::where("name", "city_manager")->first()->users)
+            $users = Role::where("name", "city_manager")->first()->users;
+            return Datatables::of($users)
                 ->addColumn('avatar', function ($cityManager) {
                     $user_img_name = explode('/', $cityManager->avatar_url)[1];
                     $avatar = '<img src="/storage/'
@@ -141,6 +143,7 @@ class CityManagerController extends Controller {
      */
     public function destroy($user_id) {
         $user = User::find($user_id);
+        $user->roles()->detach();
         if ($user->avatar_url != "public/default_avatar.png") File::delete("storage/" . explode('/', $user->avatar_url)[1]);
         $user->delete();
         return response()->json(['success' => 'User deleted successfully.']);

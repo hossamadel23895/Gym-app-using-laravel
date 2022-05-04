@@ -20,4 +20,39 @@
         </a>
     @endcan
 
+    @can('CRUD_gyms')
+        <a href="{{ route('gyms.index') }}" class="nav-link {{ Request::is('gyms') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-dashboard"></i>
+            <p>Gyms</p>
+        </a>
+    @endcan
+
+    @can('CRUD_sessions')
+        <a href="{{ route('sessions.index') }}" class="nav-link {{ Request::is('sessions') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-dashboard"></i>
+            <p>Sessions</p>
+        </a>
+    @endcan
+
+    @can('Read_attendance')
+        <a href="{{ route('attendance.index') }}" class="nav-link {{ Request::is('attendance') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-dashboard"></i>
+            <p>Attendance</p>
+        </a>
+    @endcan
+
+    @if(auth()->user()->hasAnyPermission(['CRUD_packages', 'Read_packages']))
+    <a href="{{ route('packages.index') }}" class="nav-link {{ Request::is('packages') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-dashboard"></i>
+            <p>Packages</p>
+        </a>
+    @endif
+
+    @can('Read_purchases')
+        <a href="{{ route('purchases.index') }}" class="nav-link {{ Request::is('purchases') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-dashboard"></i>
+            <p>Purchases</p>
+        </a>
+    @endcan
+
 </li>
