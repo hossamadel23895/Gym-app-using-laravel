@@ -41,8 +41,8 @@
         </a>
     @endcan
 
-    @if(auth()->user()->hasAnyPermission(['CRUD_packages', 'Read_packages']))
-    <a href="{{ route('packages.index') }}" class="nav-link {{ Request::is('packages') ? 'active' : '' }}">
+    @if (auth()->user()->hasAnyPermission(['CRUD_packages', 'Read_packages']))
+        <a href="{{ route('packages.index') }}" class="nav-link {{ Request::is('packages') ? 'active' : '' }}">
             <i class="nav-icon fas fa-dashboard"></i>
             <p>Packages</p>
         </a>
@@ -54,5 +54,11 @@
             <p>Purchases</p>
         </a>
     @endcan
+
+    <a href="{{ route('purchases.create') }}" class="nav-link {{ Request::is('purchases') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-dashboard"></i>
+
+        <p>Buy package for user</p>
+    </a>
 
 </li>

@@ -14,6 +14,8 @@
                 <th scope="col">Day</th>
                 <th scope="col">Starts At</th>
                 <th scope="col">Finishes At</th>
+                <th scope="col">Gym</th>
+                <th scope="col">City</th>
                 <th scope="col">Coaches</th>
                 <th scope="col">Members</th>
             </tr>
@@ -88,7 +90,7 @@
                 }
             });
 
-            $('#sessionsTable').DataTable({
+            var table = $('#sessionsTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route('sessions.index') }}',
@@ -105,6 +107,12 @@
                         data: 'finishes_at',
                     },
                     {
+                        data: 'gym',
+                    },
+                    {
+                        data: 'city',
+                    },
+                    {
                         data: 'coaches',
                     },
                     {
@@ -113,6 +121,19 @@
                 ]
             });
 
+            // Hide column depending on current user role.
+            var userIsCityManager = "{{ Auth::user()->hasRole('city_manager') }}"
+            if(userIsCityManager){
+                table.column('5').visible(false);
+            }
+
+            var userIsGymManager = "{{ Auth::user()->hasRole('gym_manager') }}"
+            if(userIsGymManager){
+                table.column('5').visible(false);
+                table.column('4').visible(false);
+            }
+
+            
             // Create button action.
             $('#createNewSession').click(function() {
                 $(".print-error-msg").css('display', 'none');

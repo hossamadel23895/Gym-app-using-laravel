@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->unsignedInteger('sessions_amount');
             $table->morphs('buyable');
             $table->morphs('sellable');
-            $table->morphs('has_purchases');
             $table->timestamps();
         });
     }

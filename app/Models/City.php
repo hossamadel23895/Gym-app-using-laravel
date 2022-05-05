@@ -15,4 +15,8 @@ class City extends Model {
     public function users() {
         return $this->morphMany(User::class, 'manageable');
     }
+
+    public function gyms(){
+        return $this->morphMany(Gym::class, 'has_gyms');
+    }
 }

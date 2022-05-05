@@ -19,6 +19,10 @@ class Gym extends Model {
         return $this->morphMany(User::class, 'manageable');
     }
 
+    public function has_gyms(){
+        return $this->morphTo();
+    }
+
     public function sessions() {
         return $this->morphMany(Session::class, 'has_sessions');
     }

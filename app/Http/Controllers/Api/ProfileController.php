@@ -45,8 +45,8 @@ class ProfileController extends Controller
             $allData['avatar_url']=$image_name;
         }
 
-
-
+        $allData['password'] = bcrypt($user->password);
+        
         $user->update($allData);
 
         return response()->json([

@@ -46,6 +46,7 @@ class VerificationController extends Controller
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
+    
     public function resend(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
@@ -60,6 +61,7 @@ class VerificationController extends Controller
                     ? new JsonResponse([], 202)
                     : back()->with('resent', true);
     }
+
     public function verify($id, Request $request)
     {
         $user=User::find($id);
@@ -67,8 +69,6 @@ class VerificationController extends Controller
             throw new AuthorizationException;
         }
 
-
-        // dd($request->all(), $id, $request->user(), $user->getKey());
         if ($user->hasVerifiedEmail()) {
             return $request->wantsJson()
                         ? new JsonResponse([], 204)

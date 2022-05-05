@@ -80,7 +80,7 @@ class CityManagerController extends Controller {
                 'national_id' => $request->national_id,
                 'avatar_url' => $user_img_path,
                 'manageable_id' => $request->manageable_id,
-                'manageable_type' => "\App\Models\City",
+                'manageable_type' => "App\Models\City",
             ],
         );
 
