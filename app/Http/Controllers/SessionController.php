@@ -9,15 +9,19 @@ use App\Models\City;
 use Illuminate\Support\Facades\File;
 use Spatie\Permission\Models\Role;
 use \App\Http\Requests\StoreSessionRequest;
+use App\Models\Attendance;
 use yajra\Datatables\Datatables;
+use App\Models\session_user;
 
-class SessionController extends Controller {
+class SessionController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         if ($request->ajax()) {
             $sessions = Session::query();
             return Datatables::of($sessions)
@@ -35,7 +39,8 @@ class SessionController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         //
     }
 
@@ -45,7 +50,8 @@ class SessionController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreSessionRequest $request) {
+    public function store(StoreSessionRequest $request)
+    {
         $session = Session::Create(
             [
                 'name' => $request->name,
@@ -60,7 +66,8 @@ class SessionController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($id)
+    {
         //
     }
 
@@ -70,7 +77,8 @@ class SessionController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
         //
     }
 
@@ -81,7 +89,8 @@ class SessionController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreSessionRequest $request, $session_id) {
+    public function update(StoreSessionRequest $request, $session_id)
+    {
         $session = Session::find($session_id);
 
         $session->update([
@@ -96,9 +105,17 @@ class SessionController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($session_id) {
+    public function destroy($session_id)
+    {
         $session = Session::find($session_id);
         $session->delete();
         return response()->json(['success' => 'Session deleted successfully.']);
+    }
+    public function calculate_remaining(Request $request, $user_id)
+    {
+        $TotalSessions = session_user::where('user_id', $user_id)->count();
+        $attendedSessions = Attendance::where('member_id', $user_id)->count();
+        $remainingSessions = $TotalSessions -$attendedSessions;
+        return response()->json(['remainingSessions' => $remainingSessions]);
     }
 }

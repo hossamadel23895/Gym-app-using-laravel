@@ -9,10 +9,9 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
-    use HasRoles;
+    use HasApiTokens, HasFactory, Notifiable , HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'id',
         'name',
         'email',
         'password',
@@ -48,7 +48,9 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'date_of_birth' => 'date:d/m/Y',
     ];
+
 
     public function manageable()
     {
@@ -60,11 +62,25 @@ class User extends Authenticatable
         return $this->belongsToMany(Session::class);
     }
 
-    public function buys(){
+    public function buys()
+    {
         return $this->morphMany('App\Purchase', 'buyable');
     }
 
-    public function sells(){
+    public function sells()
+    {
         return $this->morphMany('App\Purchase', 'sellable');
+    }
+    public function member()
+    {
+        return $this->belongsTo(Attendance::class, 'member_id', 'id');
+    }
+    public function routeNotificationForMail($notification)
+    {
+        // Return email address only...
+        return $this->email;
+
+        // Return email address and name...
+        return [$this->email => $this->name];
     }
 }

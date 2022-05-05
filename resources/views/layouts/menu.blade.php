@@ -54,5 +54,24 @@
             <p>Purchases</p>
         </a>
     @endcan
+    @can('CRUD_purchases')
+        <a href="{{ route('purchases.create') }}" class="nav-link {{ Request::is('purchases') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-dashboard"></i>
+            <p>Buy package for user</p>
+        </a>
+    @endcan
+
+    {{-- @if(auth()->user()->hasAnyPermission(['CRUD_purchases']))
+    <a href="{{ route('purchases.create') }}" class="nav-link {{ Request::is('purchases') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-dashboard"></i>
+
+            <p>Buy package for user</p>
+        </a>
+    @endif --}}
+    <a href="{{ route('purchases.create') }}" class="nav-link {{ Request::is('purchases') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-dashboard"></i>
+
+        <p>Buy package for user</p>
+    </a>
 
 </li>
