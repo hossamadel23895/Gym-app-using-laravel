@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\File;
 use Spatie\Permission\Models\Role;
 use \App\Http\Requests\StoreSessionRequest;
 use yajra\Datatables\Datatables;
+use Carbon\Carbon;
 
 class SessionController extends Controller {
     /**
@@ -20,6 +21,23 @@ class SessionController extends Controller {
     public function index(Request $request) {
         if ($request->ajax()) {
             return DataTables::of(Session::query())
+                // ->addColumn('day', function (Session $session) {
+                //     dd($session->starts_at->format('Y/m/d'));
+                //     // return $user->updated_at->format('Y/m/d');
+                // })
+
+                ->addColumn('day', function ($session) {
+                    return Carbon::parse($session->starts_at)->format('d/m/Y');
+                })
+
+                ->editColumn('starts_at', function ($session) {
+                    return Carbon::parse($session->starts_at)->format('Y/m/d');
+                })
+
+                ->editColumn('finishes_at', function ($session) {
+                    return Carbon::parse($session->finishes_at)->format('Y/m/d');
+                })
+
                 ->addColumn('coaches', function (Session $session) {
                     $query = Session::query()->with(['users' => function ($q) {
                         $q->role('coach');

@@ -42,4 +42,9 @@ Route::get('attendance', [AttendanceController::class, 'index'])->name('attendan
 
 Route::resource('packages', PackageController::class)->middleware('permission:CRUD_packages|Read_packages');
 
-Route::resource('purchases', PurchaseController::class)->middleware('permission:Read_purchases');
+//Route::resource('purchases', PurchaseController::class)->only(['index', 'create'])->middleware('auth:sanctum');
+Route::get('purchases/', [PurchaseController::class, 'index'])->name('purchases.index')->middleware('auth:sanctum');
+Route::get('purchases/create', [PurchaseController::class, 'create'])->name('purchases.create')->middleware('auth:sanctum');
+Route::post('purchases/store', [PurchaseController::class, 'store'])->name('purchases.store')->middleware('auth:sanctum');
+
+Route::get('purchases/finish/{status}', [PurchaseController::class, 'pay'])->name('payment');

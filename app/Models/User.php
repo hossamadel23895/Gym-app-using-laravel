@@ -9,8 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
     use HasApiTokens, HasFactory, Notifiable;
     use HasRoles;
 
@@ -48,23 +47,30 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'date_of_birth' => 'date:d/m/Y',
     ];
 
-    public function manageable()
-    {
+    public function manageable() {
         return $this->morphTo();
     }
 
-    public function sessions()
-    {
+    public function sessions() {
         return $this->belongsToMany(Session::class);
     }
 
-    public function buys(){
+    public function buys() {
         return $this->morphMany(Purchase::class, 'buyable');
     }
 
-    public function sells(){
+    public function sells() {
         return $this->morphMany(Purchase::class, 'sellable');
+    }
+
+    public function routeNotificationForMail($notification) {
+        // Return email address only...
+        return $this->email;
+
+        // Return email address and name...
+        return [$this->email => $this->name];
     }
 }

@@ -18,16 +18,15 @@ class Purchase extends Model {
         'sellable_type',
     ];
 
-    public function buyable(){
+    public function buyable() {
         return $this->morphTo();
     }
 
-    public function sellable(){
+    public function sellable() {
         return $this->morphTo();
     }
 
-    public function has_purchases(){
+    public function has_purchases() {
         return $this->morphTo();
     }
-
 }

@@ -11,6 +11,9 @@
         <thead>
             <tr>
                 <th scope="col">Session Name</th>
+                <th scope="col">Day</th>
+                <th scope="col">Starts At</th>
+                <th scope="col">Finishes At</th>
                 <th scope="col">Coaches</th>
                 <th scope="col">Members</th>
             </tr>
@@ -74,7 +77,8 @@
     </div>
 
     <script>
-        var session_id = "";
+        var session_id;
+        var editor;
 
         $(document).ready(function() {
             $.noConflict();
@@ -83,21 +87,28 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             $('#sessionsTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route('sessions.index') }}',
                 columns: [{
                         data: 'name',
-                        name: 'sessions.name'
+                    },
+                    {
+                        data: 'day',
+                    },
+                    {
+                        data: 'starts_at',
+                    },
+                    {
+                        data: 'finishes_at',
                     },
                     {
                         data: 'coaches',
-                        name: 'coaches.name'
                     },
                     {
                         data: 'members',
-                        name: 'members.name'
                     },
                 ]
             });
@@ -118,7 +129,8 @@
 
                 session_id = $(this).data('id');
                 var name = $(this).parent().siblings()[1].innerHTML;
-                $.get("{{ route('sessions.index') }}" + '/' + session_id + '/edit', function(data) {
+                $.get("{{ route('sessions.index') }}" + '/' + session_id + '/edit', function(
+                    data) {
                     $('#modelHeading').html("Edit Session");
                     $('#saveBtn').val("edit-session");
                     $('#insertModel').modal('show');

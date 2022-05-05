@@ -34,6 +34,26 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js">
     </script>
 
+    <script>
+        // Date renderer for DataTables from cdn.datatables.net/plug-ins/1.10.21/dataRender/datetime.js
+        $.fn.dataTable.render.moment = function(from, to, locale) {
+            if (arguments.length === 1) {
+                locale = 'en';
+                to = from;
+                from = 'YYYY-MM-DD';
+            } else if (arguments.length === 2) {
+                locale = 'en';
+            }
+            return function(d, type, row) {
+                if (!d) {
+                    return type === 'sort' || type === 'type' ? 0 : d;
+                }
+                var m = window.moment(d, from, locale, true);
+                return m.format(type === 'sort' || type === 'type' ? 'x' : to);
+            };
+        };
+    </script>
+
     <div class="wrapper">
         <!-- Main Header -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
