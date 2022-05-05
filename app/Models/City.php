@@ -13,6 +13,6 @@ class City extends Model {
     ];
 
     public function users() {
-        return $this->morphMany('App\User', 'manageable');
+        return $this->morphMany(User::class, 'manageable');
     }
 }

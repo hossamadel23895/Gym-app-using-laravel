@@ -11,6 +11,8 @@
         <thead>
             <tr>
                 <th scope="col">Session Name</th>
+                <th scope="col">Coaches</th>
+                <th scope="col">Members</th>
             </tr>
         </thead>
     </table>
@@ -87,7 +89,15 @@
                 ajax: '{{ route('sessions.index') }}',
                 columns: [{
                         data: 'name',
-                        name: 'name'
+                        name: 'sessions.name'
+                    },
+                    {
+                        data: 'coaches',
+                        name: 'coaches.name'
+                    },
+                    {
+                        data: 'members',
+                        name: 'members.name'
                     },
                 ]
             });

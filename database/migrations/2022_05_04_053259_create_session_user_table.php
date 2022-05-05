@@ -14,6 +14,10 @@ return new class extends Migration {
         Schema::create('session_user', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('member_name');
+            $table->string('email');
+            $table->string('session_name');
+            $table->dateTimeTz('attendance_datetime');
             $table->integer('session_id');
             $table->integer('user_id');
         });

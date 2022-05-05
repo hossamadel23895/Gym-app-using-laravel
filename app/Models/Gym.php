@@ -16,14 +16,18 @@ class Gym extends Model {
     ];
 
     public function users() {
-        return $this->morphMany('App\User', 'manageable');
+        return $this->morphMany(User::class, 'manageable');
     }
 
     public function sessions() {
-        return $this->morphMany('App\Session', 'has_sessions');
+        return $this->morphMany(Session::class, 'has_sessions');
     }
 
     public function packages() {
-        return $this->morphMany('App\Package', 'has_packages');
+        return $this->morphMany(Package::class, 'has_packages');
+    }
+
+    public function purchases() {
+        return $this->morphMany(Purchase::class, 'has_purchases');
     }
 }

@@ -61,10 +61,10 @@ class User extends Authenticatable
     }
 
     public function buys(){
-        return $this->morphMany('App\Purchase', 'buyable');
+        return $this->morphMany(Purchase::class, 'buyable');
     }
 
     public function sells(){
-        return $this->morphMany('App\Purchase', 'sellable');
+        return $this->morphMany(Purchase::class, 'sellable');
     }
 }

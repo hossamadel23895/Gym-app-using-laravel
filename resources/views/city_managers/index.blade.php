@@ -188,9 +188,11 @@
             $('#saveBtn').click(function(e) {
                 e.preventDefault();
                 $(this).html('Sending..');
+
                 var request_is_create = $('#modelHeading').html() == "Add New User";
                 var url = request_is_create ? "/city_managers" : "/city_managers/" + user_id;
                 var method = request_is_create ? "POST" : "PUT";
+
                 var myFormData = new FormData();
                 myFormData.append('_method', method);
                 myFormData.append('user_id', user_id);
@@ -272,10 +274,5 @@
                 $(".print-error-msg").find("ul").append('<li>' + value[0] + '</li>');
             });
         }
-    </script>
-
-    <script>
-        // Updating confirmation box delete button uri with the id of the clicked post.
-        const updateConfirmUri = (e) => document.getElementById("delete_form").action = e.getAttribute("href");
     </script>
 @endsection

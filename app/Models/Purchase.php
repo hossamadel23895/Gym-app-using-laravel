@@ -26,4 +26,8 @@ class Purchase extends Model {
         return $this->morphTo();
     }
 
+    public function has_purchases(){
+        return $this->morphTo();
+    }
+
 }

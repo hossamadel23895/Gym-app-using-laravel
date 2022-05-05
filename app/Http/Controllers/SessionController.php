@@ -19,8 +19,19 @@ class SessionController extends Controller {
      */
     public function index(Request $request) {
         if ($request->ajax()) {
-            $sessions = Session::query();
-            return Datatables::of($sessions)
+            return DataTables::of(Session::query())
+                ->addColumn('coaches', function (Session $session) {
+                    $query = Session::query()->with(['users' => function ($q) {
+                        $q->role('coach');
+                    }])->where("name", $session->name)->first()->users->pluck('name')->implode(', ');
+                    return $query;
+                })
+                ->addColumn('members', function (Session $session) {
+                    $query = Session::query()->with(['users' => function ($q) {
+                        $q->role('member');
+                    }])->where("name", $session->name)->first()->users->pluck('name')->implode(', ');
+                    return $query;
+                })
                 ->make(true);
         } else {
             $coaches = Role::where("name", "coach")->first()->users;
