@@ -10,6 +10,8 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\CoachController;
+use App\Http\Controllers\MemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +37,10 @@ Route::resource('city_managers', CityManagerController::class)->middleware('perm
 Route::resource('gym_managers', GymManagerController::class)->middleware('permission:CRUD_gym_managers');
 Route::delete('gym_managers/{gym_manager}/ban', ['uses' => GymManagerController::class . '@ban', 'middleware' => 'permission:CRUD_gym_managers']);
 Route::get('gym_managers/{gym_manager}/unban', ['uses' => GymManagerController::class . '@unban', 'middleware' => 'permission:CRUD_gym_managers']);
+
+Route::resource('coaches', CoachController::class)->middleware('permission:CRUD_coaches');
+
+Route::resource('members', MemberController::class)->middleware('permission:CRUD_members');
 
 Route::resource('gyms', GymController::class)->middleware('permission:CRUD_gyms');
 
