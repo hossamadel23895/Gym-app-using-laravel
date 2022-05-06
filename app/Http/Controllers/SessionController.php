@@ -191,10 +191,11 @@ class SessionController extends Controller
     {
         $Sessions=$this->calculate_remaining($request, $user_id)->original;
         $session_name = $request->name;
-        $sessions_id = session::select('id')->where('name', $session_name)->get();
+        $sessions_id = session::select('id')->where('name', $session_name)->first();
         $remainingSessions=$Sessions['remainingSessions'];
         $date = $request->attendance_date;
         $time = $request->attendance_time;
+        //  return response()->json($sessions_id->id);
         if ($remainingSessions==0) {
             return  response()->json([
                 'message'=>'you need to buy training sessions in order to attend'
@@ -209,8 +210,9 @@ class SessionController extends Controller
         Session_user::create([
             'attendance_date' => $date,
             'attendance_time' => $time,
-            'session_id' => $sessions_id,
+            'session_id' => $sessions_id->id,
             'user_id' => $user_id,
         ]);
+        return response()->json(['message'=>'success' ]);
     }
 }
