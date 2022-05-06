@@ -19,6 +19,8 @@ return new class extends Migration {
             $table->morphs('buyable');
             $table->morphs('sellable');
             $table->timestamps();
+            $table->integer('gym_id');
+            $table->boolean('is_paid')->default(0);
         });
     }
 

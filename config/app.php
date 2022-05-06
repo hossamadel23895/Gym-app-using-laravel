@@ -14,6 +14,11 @@ return [
     |
     */
 
+
+    'providers' => [
+        Cog\Laravel\Ban\Providers\BanServiceProvider::class,
+    ],
+    
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

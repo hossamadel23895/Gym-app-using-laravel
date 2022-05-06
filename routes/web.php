@@ -33,6 +33,8 @@ Route::get('home', [HomeController::class, 'index'])->name('home');
 Route::resource('city_managers', CityManagerController::class)->middleware('permission:CRUD_city_managers');
 
 Route::resource('gym_managers', GymManagerController::class)->middleware('permission:CRUD_gym_managers');
+Route::delete('gym_managers/{gym_manager}/ban', ['uses' => GymManagerController::class . '@ban', 'middleware' => 'permission:CRUD_gym_managers']);
+Route::get('gym_managers/{gym_manager}/unban', ['uses' => GymManagerController::class . '@unban', 'middleware' => 'permission:CRUD_gym_managers']);
 
 Route::resource('gyms', GymController::class)->middleware('permission:CRUD_gyms');
 
