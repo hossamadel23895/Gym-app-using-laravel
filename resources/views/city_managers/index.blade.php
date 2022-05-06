@@ -5,7 +5,7 @@
         <h1 class="text-black-50 text-center"> City Managers </h1>
     </div>
     <div class="d-flex justify-content-end mb-3">
-        <a class="btn btn-success" href="javascript:void(0)" id="createNewUser"> Add New User</a>
+        <a class="btn btn-success" href="javascript:void(0)" id="createNewUser">Add New User</a>
     </div>
     <table id="cityManagersTable" class="table table-bordered mt-4">
         <thead>

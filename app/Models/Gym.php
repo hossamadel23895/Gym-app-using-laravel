@@ -34,4 +34,8 @@ class Gym extends Model {
     public function purchases() {
         return $this->morphMany(Purchase::class, 'has_purchases');
     }
+
+    public function creatable(){
+        return $this->morphTo();
+    }
 }

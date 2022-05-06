@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('cover_url');
             $table->timestamps();
             $table->morphs('has_gyms');
+            $table->morphs('creatable');
         });
     }
 

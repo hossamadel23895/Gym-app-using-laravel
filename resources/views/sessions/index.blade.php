@@ -5,7 +5,7 @@
         <h1 class="text-black-50 text-center"> Sessions </h1>
     </div>
     <div class="d-flex justify-content-end mb-3">
-        <a class="btn btn-success" href="javascript:void(0)" id="createNewSession"> Add New Session</a>
+        <a class="btn btn-success" href="javascript:void(0)" id="createNewSession">Add New Session</a>
     </div>
     <table id="sessionsTable" class="table table-bordered mt-4">
         <thead>
@@ -18,6 +18,7 @@
                 <th scope="col">City</th>
                 <th scope="col">Coaches</th>
                 <th scope="col">Members</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
     </table>
@@ -36,10 +37,57 @@
                             <ul></ul>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Session Name</label>
+                            <label class="col-sm-12 control-label">Session Name</label>
                             <div class="col-sm-12">
                                 <input type="text" class="form-control" id="name" name="name"
                                     placeholder="Enter Session Name" value="" maxlength="255" required="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label">Session Start Date & Time</label>
+                            <div class="col-sm-12">
+                                <input type="datetime-local" id="starts_at" name="starts_at" value="" required="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12 control-label">Session End Date & Time</label>
+                            <div class="col-sm-12">
+                                <input type="datetime-local" id="finishes_at" name="finishes_at" value="" required="">
+                            </div>
+                        </div>
+
+                        <div class="form-group" @hasrole('gym_manager') style="display:none" @endhasrole>
+                            <label class="col-sm-12 control-label">Select Gym</label>
+                            <select id="gymSelect" class="col-sm-12">
+                                @foreach ($gyms as $gym)
+                                    <option value="{{ $gym->id }}">{{ $gym->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group d-flex flex-column">
+                            <label class="col-sm-12 control-label">Select Coaches</label>
+                            <div class="d-flex align-items-center mx-2">
+                                @foreach ($coaches as $coach)
+                                    <label class="mx-2">
+                                        <input type="checkbox" class="coachesSelect" name="coaches"
+                                            value="{{ $coach->id }}">
+                                        {{ $coach->name }}
+                                    </label><br>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div class="form-group d-flex flex-column">
+                            <label class="col-sm-12 control-label">Select Members</label>
+                            <div class="d-flex align-items-center mx-2">
+                                @foreach ($members as $member)
+                                    <label class="mx-2">
+                                        <input type="checkbox" class="membersSelect" name="members"
+                                            value="{{ $member->id }}">
+                                        {{ $member->name }}
+                                    </label><br>
+                                @endforeach
                             </div>
                         </div>
 
@@ -118,22 +166,25 @@
                     {
                         data: 'members',
                     },
+                    {
+                        data: 'action',
+                    },
                 ]
             });
 
             // Hide column depending on current user role.
             var userIsCityManager = "{{ Auth::user()->hasRole('city_manager') }}"
-            if(userIsCityManager){
+            if (userIsCityManager) {
                 table.column('5').visible(false);
             }
 
             var userIsGymManager = "{{ Auth::user()->hasRole('gym_manager') }}"
-            if(userIsGymManager){
+            if (userIsGymManager) {
                 table.column('5').visible(false);
                 table.column('4').visible(false);
             }
 
-            
+
             // Create button action.
             $('#createNewSession').click(function() {
                 $(".print-error-msg").css('display', 'none');
@@ -149,7 +200,7 @@
                 $(".print-error-msg").css('display', 'none');
 
                 session_id = $(this).data('id');
-                var name = $(this).parent().siblings()[1].innerHTML;
+                var name = $(this).parent().siblings()[0].innerHTML;
                 $.get("{{ route('sessions.index') }}" + '/' + session_id + '/edit', function(
                     data) {
                     $('#modelHeading').html("Edit Session");
@@ -162,6 +213,17 @@
             // Handling both Create and edit ajax requests.
             $('#saveBtn').click(function(e) {
                 e.preventDefault();
+
+                let selectedCoaches = [];
+                $.each($("input[name='coaches']:checked"), function() {
+                    selectedCoaches.push($(this).val());
+                });
+
+                let selectedMembers = [];
+                $.each($("input[name='members']:checked"), function() {
+                    selectedMembers.push($(this).val());
+                });
+
                 $(this).html('Sending..');
                 var request_is_create = $('#modelHeading').html() == "Add New Session";
                 var url = request_is_create ? "/sessions" : "/sessions/" + session_id;
@@ -170,6 +232,11 @@
                 myFormData.append('_method', method);
                 myFormData.append('session_id', session_id);
                 myFormData.append('name', $('#name').val());
+                myFormData.append('starts_at', ($('#starts_at').val().replace("T", " ")).concat(':00'));
+                myFormData.append('finishes_at', ($('#finishes_at').val().replace("T", " ")).concat(':00'));
+                myFormData.append('coaches', selectedCoaches);
+                myFormData.append('members', selectedMembers);
+                myFormData.append('has_sessions_id', $('#gymSelect').find(":selected").val());
 
                 $.ajax({
                     url: url,

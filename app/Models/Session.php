@@ -14,6 +14,10 @@ class Session extends Model {
      */
     protected $fillable = [
         'name',
+        'starts_at',
+        'finishes_at',
+        'has_sessions_type',
+        'has_sessions_id',
     ];
 
 

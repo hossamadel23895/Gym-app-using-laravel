@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use App\Rules\NotOverlapped;
 
 class StoreSessionRequest extends FormRequest {
     /**
@@ -15,6 +16,8 @@ class StoreSessionRequest extends FormRequest {
         return true;
     }
 
+
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -23,6 +26,8 @@ class StoreSessionRequest extends FormRequest {
     public function rules() {
         return [
             'name' => 'required|min:3',
+            'starts_at' => ['sometimes', 'required', 'date_format:Y-m-d H:i:s', new NotOverlapped($this->session_id)],
+            'finishes_at' => ['sometimes', 'required', 'date_format:Y-m-d H:i:s', 'after:starts_at', new NotOverlapped($this->session_id)],
         ];
     }
 }

@@ -66,6 +66,10 @@ class User extends Authenticatable {
         return $this->morphMany(Purchase::class, 'sellable');
     }
 
+    public function gyms() {
+        return $this->morphMany(Gym::class, 'creatable');
+    }
+
     public function routeNotificationForMail($notification) {
         // Return email address only...
         return $this->email;

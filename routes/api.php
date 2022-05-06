@@ -48,8 +48,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 
-Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
-Route::get('/password/reset', [ResetPasswordController::class, 'reset']);
+// Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+// Route::get('/password/reset', [ResetPasswordController::class, 'reset']);
 
 Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 Route::get('/email/verify/{id}', [VerificationController::class, 'v
