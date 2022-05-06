@@ -57,4 +57,4 @@ Route::get('/email/verify/{id}', [VerificationController::class, 'verify'])->nam
 Route::post('/profile/update-profile', [ProfileController::class, 'update_profile'])->name('update.profile')->middleware('auth:sanctum');
 Route::get('/remainingSession/{user_id}', [SessionController::class, 'calculate_remaining'])->name('session.remaining');
 Route::get('/attendance-history/{user_id}', [SessionController::class, 'calculate_attendance'])->name('session.attendance')->middleware('auth:sanctum');
-Route::get('/test', [PurchaseController::class, 'test'])->middleware('auth:sanctum');
+Route::post('/training-sessions/{id}', [SessionController::class, 'attend_session']);

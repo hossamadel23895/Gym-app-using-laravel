@@ -177,7 +177,7 @@ class SessionController extends Controller
         }
         $attendedSessions = session_user::where('user_id', $user_id)->count();
         $remainingSessions = $totalSessions - $attendedSessions;
-        return response()->json(['RemainingSessions' => $remainingSessions]);
+        return response()->json(['remainingSessions' => $remainingSessions,'totalSessions'=>$totalSessions]);
     }
     public function calculate_attendance(Request $request, $user_id)
     {
@@ -186,5 +186,31 @@ class SessionController extends Controller
         $gym_name = Gym::select('name')-> where('id', $gym_id->gym_id)->get();
         $dates = session_user::select('attendance_date', 'attendance_time')->where('user_id', $user_id)->get();
         return response()->json(['training Sessions name'=>$sessions_name,'gym name'=>$gym_name,'attendance date and time'=>$dates]);
+    }
+    public function attend_session(Request $request, $user_id)
+    {
+        $Sessions=$this->calculate_remaining($request, $user_id)->original;
+        $session_name = $request->name;
+        $sessions_id = session::select('id')->where('name', $session_name)->get();
+        $remainingSessions=$Sessions['remainingSessions'];
+        $date = $request->attendance_date;
+        $time = $request->attendance_time;
+        if ($remainingSessions==0) {
+            return  response()->json([
+                'message'=>'you need to buy training sessions in order to attend'
+            ]);
+        }
+
+        if ($date !==Carbon::now()->format('Y-m-d')) {
+            return  response()->json([
+                'message'=>'it is not allowed to attend '
+            ]);
+        }
+        Session_user::create([
+            'attendance_date' => $date,
+            'attendance_time' => $time,
+            'session_id' => $sessions_id,
+            'user_id' => $user_id,
+        ]);
     }
 }
