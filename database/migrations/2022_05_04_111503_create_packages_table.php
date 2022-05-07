@@ -18,7 +18,11 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedDecimal('price', $precision = 8, $scale = 2);
             $table->unsignedInteger('sessions_amount');
-            $table->morphs('has_packages');
+
+            $table->string("has_packages_type")->nullable();
+            $table->unsignedBigInteger("has_packages_id")->nullable();
+            $table->index(["has_packages_type", "has_packages_id"]);
+
             $table->timestamps();
         });
     }

@@ -6,12 +6,15 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 
 class AdminUserSeeder extends Seeder {
+    
     /**
-     * Run the database seeds.
+     * assign values for admin
      *
-     * @return void
+     * @return User 
      */
-    public function run() {
+
+
+    public function run() : User {
         $admin = User::create([
             'name' => 'admin',
             'email' => 'admin@admin.com',
@@ -19,11 +22,10 @@ class AdminUserSeeder extends Seeder {
             'password' => bcrypt('123456'),
             'national_id' => '12345677654321',
             'avatar_url' => 'public/default_avatar.png',
-            'manageable_id' => function() {
-                return factory(App\User::class)->create()->id;
-            },
+            'date_of_birth' => '1999-9-13 00:00:0000'
         ]);
 
         $admin->assignRole('admin');
+        return $admin ;
     }
 }

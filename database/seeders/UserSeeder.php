@@ -15,19 +15,16 @@ class UserSeeder extends Seeder {
      *
      * @return void
      */
-    public function run() {
-        for ($i = 0; $i < 50; $i++) {
-            $user = User::create([
-                'name' => Str::random(10),
-                'email' => Str::random(10) . '@gmail.com',
-                'password' => Hash::make('123456'),
-                'email_verified_at' => now(),
-                'national_id' => rand(10000000000000, 99999999999999),
-                'avatar_url' => 'public/default_avatar.png',
-            ]);
-
-            // attach random role to user, the can be duplicated
-            $user->roles()->attach(rand(8, 9));
-        }
+    public function run(string $name, string $email, string $password, string $dateOfBirth, string $gender, int $nationalId, string $avatarUrl): User {
+        return User::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => Hash::make($password),
+            'email_verified_at' => now(),
+            'national_id' => $nationalId,
+            'avatar_url' => $avatarUrl,
+            'date_of_birth' => $dateOfBirth,
+            'gender' => $gender
+        ]);
     }
 }

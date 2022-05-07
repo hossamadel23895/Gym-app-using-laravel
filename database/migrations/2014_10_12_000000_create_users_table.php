@@ -8,7 +8,7 @@ return new class extends Migration {
     /**
      * Run the migrations.
      *
-     * @return void
+     * @return void    
      */
     public function up() {
         Schema::create('users', function (Blueprint $table) {
@@ -19,7 +19,11 @@ return new class extends Migration {
             $table->string('password')->nullable();
             $table->string('national_id')->nullable();
             $table->string('avatar_url')->nullable();
-            $table->morphs("manageable");
+        
+            $table->string("manageable_type")->nullable();
+            $table->unsignedBigInteger("manageable_id")->nullable();
+            $table->index(["manageable_type", "manageable_id"]);
+
             $table->rememberToken();
             $table->enum('gender', ['male', 'female']);
             $table->date('date_of_birth');
