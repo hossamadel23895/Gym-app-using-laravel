@@ -52,8 +52,6 @@ This is a solution of creating basic Gym system using Laravel
 * [Sanctum](https://laravel.com/docs/master/sanctum)
 
 
-https://stripe.com/docs/payments
-
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Authors
