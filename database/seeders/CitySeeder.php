@@ -8,16 +8,16 @@ use Illuminate\Support\Str;
 use App\Models\City;
 
 class CitySeeder extends Seeder {
-
     /**
-     * assign values for Cities table
-     * @param string $name City name to be created 
-     * @return City created
+     * Run the database seeds.
+     *
+     * @return void
      */
-
-    public function run(string $name): City {
-        return City::create([
-            'name' => $name,
-        ]);
+    public function run() {
+        for ($i = 0; $i < 5; $i++) {
+            $city = City::create([
+                'name' => Str::random(10),
+            ]);
+        }
     }
 }
