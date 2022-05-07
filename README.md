@@ -58,13 +58,13 @@ https://stripe.com/docs/payments
 
 ## Authors
 
-* Github   - [Sarah Abdeldaym](https://www.linkedin.com/in/sarah-abd-eldaym-594368183/)
-* Github   - [Hossam Adel](https://www.linkedin.com/in/hossamadel23895/)
+* LinkedIn   - [Sarah Abdeldaym](https://www.linkedin.com/in/sarah-abd-eldaym-594368183/)
+* LinkedIn   - [Hossam Adel](https://www.linkedin.com/in/hossamadel23895/)
 * LinkedIn - [Monica Ashraf](https://www.linkedin.com/in/monica-ashraf-1b035816a/)
 * LinkedIn - [Amira Emad](https://www.linkedin.com/in/amira-emad-161989213/)
 * LinkedIn - [Nagwa Talaat](https://www.linkedin.com/in/nagwatalaat/)
 * LinkedIn - [Mahitab Mohsen](https://www.linkedin.com/in/mahitab-mohsen-5446401bb/)
-* Github   - [Shrouk Mamdoh](https://www.linkedin.com/in/shrouk-mamdoh-36510720a/)
+* LinkedIn   - [Shrouk Mamdoh](https://www.linkedin.com/in/shrouk-mamdoh-36510720a/)
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
