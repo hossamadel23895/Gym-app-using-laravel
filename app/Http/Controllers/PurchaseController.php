@@ -10,7 +10,6 @@ use App\Http\Requests\UpdatePurchaseRequest;
 use App\Models\TrainingPackage;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -18,9 +17,9 @@ use Illuminate\Support\Facades\URL;
 use Yajra\DataTables\Facades\DataTables;
 use Spatie\Permission\Models\Role;
 use \App\Http\Requests\StoreUserRequest;
+use App\Models\Package;
 use Stripe;
 
-use App\Models\Package;
 
 class PurchaseController extends Controller {
     /**
@@ -28,16 +27,17 @@ class PurchaseController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
-        return view('purchases.index');
+    public function index(Request $request) {
+        $members = Role::where("name", "member")->first()->users;
+        $packages = Package::query()->with('has_packages')
+            ->where('has_packages_id', auth()->user()->manageable->id)->get();
+        
+        return view('purchases.index', [
+            'packages' => $packages,
+            'members' => $members,
+        ]);
     }
-    public function create(Request $request, Response $response) {
-        $packages = Package::select('id', 'name', 'price')->orderBy('name')->get();
-        $users = User::role('member')->select('id', 'name')->orderBy('name')->get();
-        $gyms = Auth::user()->manageable;
 
-        return view('purchases.buy', compact('packages', 'users', 'gyms'));
-    }
     public function store(Request $request) {
         $package = Package::find($request->package);
         Purchase::create([
@@ -45,9 +45,9 @@ class PurchaseController extends Controller {
             'price' => $package->price,
             'sessions_amount' => $package->sessions_amount,
             'buyable_type' => 'App\Models\User',
-            'buyable_id' => Auth::user()->id, // el manager ele eshtara
+            'buyable_id' => Auth::user()->id,
             'sellable_type' => 'App\Models\User',
-            'sellable_id' => $request->user, // elsha5s ele byshtre
+            'sellable_id' => $request->user,
             'gym_id' => Auth::user()->manageable->id,
 
         ]);

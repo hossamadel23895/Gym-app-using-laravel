@@ -2,16 +2,20 @@
 
 @section('content')
     <div class="container-fluid">
-        <h1 class="text-black-50 text-center"> Attendance History </h1>
+        <h1 class="text-black-50 text-center"> Revenue </h1>
     </div>
-    <table id="attendanceTable" class="table table-bordered mt-4">
+    <table id="revenueTable" class="table table-bordered mt-4">
+        <br>
+        <center>
+            <h2>Total Revenue</h2>
+            <h2>{{$total_orders}} LE</h2>
+        </center>
         <thead>
             <tr>
                 <th scope="col">Member Name</th>
                 <th scope="col">Email</th>
-                <th scope="col">Session Name</th>
-                <th scope="col">Attendance Time</th>
-                <th scope="col">Attendance Date</th>
+                <th scope="col">Package Name</th>
+                <th scope="col">Purchase Price</th>
                 <th scope="col">Gym</th>
                 <th scope="col">City</th>
             </tr>
@@ -25,20 +29,18 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            var table = $('#attendanceTable').DataTable({
+            var table = $('#revenueTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('attendance.index') }}',
+                ajax: '{{ route('revenue.index') }}',
                 columns: [{
                     data: 'member_name',
                 }, {
                     data: 'email',
                 }, {
-                    data: 'session_name',
+                    data: 'package_name',
                 }, {
-                    data: 'attendance_time',
-                }, {
-                    data: 'attendance_date',
+                    data: 'price',
                 }, {
                     data: 'gym',
                 }, {
@@ -46,10 +48,11 @@
                 }, ]
             });
 
+
             // Hide column depending on current user role.
-            var userIsAdmin = "{{ Auth::user()->hasRole('admin') }}"
-            if (!userIsAdmin) {
-                table.column('6').visible(false);
+            var userIsCityManager = "{{ Auth::user()->hasRole('city_manager') }}"
+            if (userIsCityManager) {
+                table.column('5').visible(false);
             }
 
         });

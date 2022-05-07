@@ -67,9 +67,9 @@
 
                         <div class="form-group d-flex flex-column">
                             <label class="col-sm-12 control-label">Select Coaches</label>
-                            <div class="d-flex align-items-center mx-2">
+                            <div class="d-flex align-items-center mx-2 flex-wrap">
                                 @foreach ($coaches as $coach)
-                                    <label class="mx-2">
+                                    <label class="mx-2 d-flex">
                                         <input type="checkbox" class="coachesSelect" name="coaches"
                                             value="{{ $coach->id }}">
                                         {{ $coach->name }}
@@ -77,20 +77,7 @@
                                 @endforeach
                             </div>
                         </div>
-
-                        <div class="form-group d-flex flex-column">
-                            <label class="col-sm-12 control-label">Select Members</label>
-                            <div class="d-flex align-items-center mx-2">
-                                @foreach ($members as $member)
-                                    <label class="mx-2">
-                                        <input type="checkbox" class="membersSelect" name="members"
-                                            value="{{ $member->id }}">
-                                        {{ $member->name }}
-                                    </label><br>
-                                @endforeach
-                            </div>
-                        </div>
-
+                        
                         <div class="col-sm-offset-2 col-sm-10">
                             <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
                             </button>
@@ -238,7 +225,6 @@
                 myFormData.append('starts_at', ($('#starts_at').val().replace("T", " ")).concat(':00'));
                 myFormData.append('finishes_at', ($('#finishes_at').val().replace("T", " ")).concat(':00'));
                 myFormData.append('coaches', selectedCoaches);
-                myFormData.append('members', selectedMembers);
                 myFormData.append('has_sessions_id', $('#gymSelect').find(":selected").val());
 
                 $.ajax({
@@ -305,10 +291,13 @@
         function printErrorMsg(data) {
             $(".print-error-msg").find("ul").html('');
             $(".print-error-msg").css('display', 'block');
+
             $.each(data.responseJSON.errors, function(key, value) {
                 $(".print-error-msg").find("ul").append('<li>' + value[0] + '</li>');
             });
-            $(".print-error-msg").find("ul").append('<li>' + data.responseJSON.error + '</li>');
+            if (data.responseJSON.error != null) {
+                $(".print-error-msg").find("ul").append('<li>' + data.responseJSON.error + '</li>');
+            }
         }
     </script>
 @endsection

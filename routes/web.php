@@ -13,6 +13,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\CoachController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\RevenueController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,9 +58,10 @@ Route::group(['middleware' => ['auth', 'logs-out-banned-user', 'forbid-banned-us
 
     Route::resource('packages', PackageController::class)->middleware('permission:CRUD_packages|Read_packages');
 
-    Route::get('purchases/', [PurchaseController::class, 'index'])->name('purchases.index')->middleware('auth:sanctum');
-    Route::get('purchases/create', [PurchaseController::class, 'create'])->name('purchases.create')->middleware('auth:sanctum');
-    Route::post('purchases/store', [PurchaseController::class, 'store'])->name('purchases.store')->middleware('auth:sanctum');
+    Route::get('revenue', [RevenueController::class, 'index'])->name('revenue.index')->middleware('permission:Read_revenue');
+
+    Route::get('purchases/', [PurchaseController::class, 'index'])->name('purchases.index')->middleware('permission:Purchase_package');
+    Route::post('purchases/store', [PurchaseController::class, 'store'])->name('purchases.store')->middleware('permission:Purchase_package');
 
     Route::get('purchases/finish/{status}', [PurchaseController::class, 'pay'])->name('payment');
 });

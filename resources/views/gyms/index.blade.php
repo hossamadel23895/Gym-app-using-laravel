@@ -237,9 +237,4 @@
             });
         }
     </script>
-
-    <script>
-        // Updating confirmation box delete button uri with the id of the clicked post.
-        const updateConfirmUri = (e) => document.getElementById("delete_form").action = e.getAttribute("href");
-    </script>
 @endsection

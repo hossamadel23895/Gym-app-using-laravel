@@ -210,7 +210,9 @@
             $.each(data.responseJSON.errors, function(key, value) {
                 $(".print-error-msg").find("ul").append('<li>' + value[0] + '</li>');
             });
-            $(".print-error-msg").find("ul").append('<li>' + data.responseJSON.error + '</li>');
+            if (data.responseJSON.error != null) {
+                $(".print-error-msg").find("ul").append('<li>' + data.responseJSON.error + '</li>');
+            }
         }
     </script>
 @endsection

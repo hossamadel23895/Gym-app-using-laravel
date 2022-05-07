@@ -145,11 +145,9 @@ class SessionController extends Controller {
             ],
         );
 
-        // Connecting the session with coaches and members
+        // Connecting the session with their coaches
         $session_coaches_ids = explode(',', $request->coaches);
-        $session_members_ids = explode(',', $request->members);
-        $session_users_ids = array_merge($session_coaches_ids, $session_members_ids);
-        foreach ($session_users_ids as $user_id) {
+        foreach ($session_coaches_ids as $user_id) {
             session_user::Create(
                 [
                     'session_id' => $session->id,
@@ -189,9 +187,11 @@ class SessionController extends Controller {
      */
     public function update(StoreSessionRequest $request, $session_id) {
         $session = Session::find($session_id);
-        if ($session->users()->exists()) {
+        if (!empty($session->with(['users' => function ($q) {
+            $q->role('member');
+        }])->where("name", $session->name)->first()->users->pluck('name')->implode(', '))) {
             return response()->json([
-                'error' => 'Cant modify a Session that has users.'
+                'error' => 'Cant modify a Session that has members, Please choose another session.'
             ], 403);
         };
 
@@ -207,16 +207,14 @@ class SessionController extends Controller {
                 ],
             );
 
-            // Connecting the session with coaches and members
+            // Connecting the session with their coaches
             $session_coaches_ids = explode(',', $request->coaches);
-            $session_members_ids = explode(',', $request->members);
-            $session_users_ids = array_merge($session_coaches_ids, $session_members_ids);
 
             // Delete old session users.
             session_user::where('session_id', $session_id)->delete();
 
             // Add the new session users.
-            foreach ($session_users_ids as $user_id) {
+            foreach ($session_coaches_ids as $user_id) {
                 session_user::Create(
                     [
                         'session_id' => $session_id,
@@ -235,9 +233,11 @@ class SessionController extends Controller {
      */
     public function destroy($session_id) {
         $session = Session::find($session_id);
-        if ($session->users()->exists()) {
+        if (!empty($session->with(['users' => function ($q) {
+            $q->role('member');
+        }])->where("name", $session->name)->first()->users->pluck('name')->implode(', '))) {
             return response()->json([
-                'error' => 'Cant delete Session that has users, please delete related users first to proceed.'
+                'error' => 'Cant delete a Session that has members, Please choose another session.'
             ], 403);
         };
         Session::find($session_id)->delete();
@@ -268,7 +268,6 @@ class SessionController extends Controller {
 
     public function attend_session(Request $request, $user_id) {
         $Sessions = $this->calculate_remaining($request, $user_id)->original;
-        $session = Session::query()->where('id', $request->session_id)->first();
         $sessions_id = $request->session_id;
         $remainingSessions = $Sessions['remainingSessions'];
         $date = $request->attendance_date;

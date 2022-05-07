@@ -88,20 +88,10 @@
 </li>
 
 <li class="nav-item">
-    @can('Read_purchases')
-        <a href="{{ route('purchases.index') }}" class="nav-link {{ Request::is('purchases') ? 'active' : '' }}">
+    @can('Read_revenue')
+        <a href="{{ route('revenue.index') }}" class="nav-link {{ Request::is('revenue') ? 'active' : '' }}">
             <i class="nav-icon fas fa-dashboard"></i>
-            <p>Purchases</p>
+            <p>Revenue</p>
         </a>
     @endcan
 </li>
-
-@role('gym_manager')
-    <li class="nav-item">
-        <a href="{{ route('purchases.create') }}" class="nav-link {{ Request::is('purchases') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-dashboard"></i>
-
-            <p>Buy package for user</p>
-        </a>
-    </li>
-@endrole
