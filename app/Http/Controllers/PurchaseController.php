@@ -40,15 +40,16 @@ class PurchaseController extends Controller {
     }
     public function store(Request $request) {
         $package = Package::find($request->package);
-
         Purchase::create([
             'name' => $package->name,
             'price' => $package->price,
             'sessions_amount' => $package->sessions_amount,
             'buyable_type' => 'App\Models\User',
-            'buyable_id' => Auth::user()->id,
+            'buyable_id' => Auth::user()->id, // el manager ele eshtara
             'sellable_type' => 'App\Models\User',
-            'sellable_id' => $request->user,
+            'sellable_id' => $request->user, // elsha5s ele byshtre
+            'gym_id' => Auth::user()->manageable->id,
+
         ]);
 
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
@@ -59,7 +60,7 @@ class PurchaseController extends Controller {
                     'product_data' => [
                         'name' => $package->name . ' Training Package',
                     ],
-                    'unit_amount' => (int)$package->price*100,
+                    'unit_amount' => (int)$package->price * 100,
                 ],
                 'quantity' => 1,
             ]],
@@ -70,7 +71,7 @@ class PurchaseController extends Controller {
         return redirect($session->url, 303);
     }
     public function pay($status) {
-        $purchase_id = DB::table("purchases")->where('is_paid', 0)->where('sellable_id', Auth::user()->id)->max('id');
+        $purchase_id = DB::table("purchases")->where('is_paid', 0)->where('buyable_id', Auth::user()->id)->max('id');
         if ($purchase_id) {
             $purchase = DB::table("purchases")->where('id', $purchase_id);
             if ($status == 'success') {

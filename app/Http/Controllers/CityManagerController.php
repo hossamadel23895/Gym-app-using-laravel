@@ -117,7 +117,7 @@ class CityManagerController extends Controller {
      */
     public function update(StoreUserRequest $request, $user_id) {
         $user = User::find($user_id);
-        
+
         if (!empty($request->file('user_img'))) {
             if ($user->avatar_url != "public/default_avatar.png") File::delete("storage/" . explode('/', $user->avatar_url)[1]);
             $user_img_path = $request->file('user_img')->store('public');

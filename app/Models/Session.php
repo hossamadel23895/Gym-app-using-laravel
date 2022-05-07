@@ -19,7 +19,10 @@ class Session extends Model {
         'has_sessions_type',
         'has_sessions_id',
     ];
-
+    
+    protected $hidden = [
+        'pivot',
+    ];
 
     public function has_sessions() {
         return $this->morphTo();

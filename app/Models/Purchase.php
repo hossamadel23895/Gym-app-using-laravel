@@ -18,6 +18,8 @@ class Purchase extends Model {
         'buyable_type',
         'sellable_id',
         'sellable_type',
+        'gym_id',
+        'is_paid',
     ];
 
     public function buyable() {

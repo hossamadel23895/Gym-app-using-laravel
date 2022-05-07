@@ -21,7 +21,7 @@ class Gym extends Model {
         return $this->morphMany(User::class, 'manageable');
     }
 
-    public function has_gyms(){
+    public function has_gyms() {
         return $this->morphTo();
     }
 
@@ -37,7 +37,7 @@ class Gym extends Model {
         return $this->morphMany(Purchase::class, 'has_purchases');
     }
 
-    public function creatable(){
+    public function creatable() {
         return $this->morphTo();
     }
 }

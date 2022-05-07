@@ -31,7 +31,7 @@ class ProfileController extends Controller
         $allData=$request->all();
         if ($request->hasFile('avatar_url')) {
             if ($user->avatar_url) {
-                $old_path=public_path().'/uploads/profile_images/'.$user->avatar_url;
+                $old_path=public_path().'/storage/'.$user->avatar_url;
                 if (File::exists($old_path)) {
                     File::delete($old_path);
                 }
@@ -39,13 +39,13 @@ class ProfileController extends Controller
 
             $image_name='avatar_url-'.time().'.'.$request->avatar_url->extension();
             $allData['avatar_url']=$image_name;
-            $request->avatar_url->move(public_path('/uploads/profile_images'), $image_name);
+            $request->avatar_url->move(public_path('/storage/'), $image_name);
         } else {
             $image_name=$user->avatar_url;
             $allData['avatar_url']=$image_name;
         }
 
-        $allData['password'] = bcrypt($user->password);
+        $allData['password'] = $user->password;
         
         $user->update($allData);
 

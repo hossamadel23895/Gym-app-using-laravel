@@ -96,10 +96,12 @@
     @endcan
 </li>
 
-<li class="nav-item">
-    <a href="{{ route('purchases.create') }}" class="nav-link {{ Request::is('purchases') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-dashboard"></i>
+@role('gym_manager')
+    <li class="nav-item">
+        <a href="{{ route('purchases.create') }}" class="nav-link {{ Request::is('purchases') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-dashboard"></i>
 
-        <p>Buy package for user</p>
-    </a>
-</li>
+            <p>Buy package for user</p>
+        </a>
+    </li>
+@endrole

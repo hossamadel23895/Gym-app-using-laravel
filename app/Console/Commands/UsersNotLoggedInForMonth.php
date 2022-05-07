@@ -7,8 +7,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Notifications\NotifyInactiveUser;
 
-class UsersNotLoggedInForMonth extends Command
-{
+class UsersNotLoggedInForMonth extends Command {
     /**
      * The name and signature of the console command.
      *
@@ -29,8 +28,7 @@ class UsersNotLoggedInForMonth extends Command
      *
      * @return int
      */
-    public function handle()
-    {
+    public function handle() {
         $limit = Carbon::now()->subMonth(1);
         $inactive_user = User::where('last_login', '<', $limit)->get();
 

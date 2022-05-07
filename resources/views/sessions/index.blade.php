@@ -110,6 +110,9 @@
                 </div>
                 <div class="modal-body">
                     <form method="post" id="deleteForm" name="deleteForm" class="form-horizontal">
+                        <div class="alert alert-danger print-error-msg" style="display:none">
+                            <ul></ul>
+                        </div>
                         @csrf
                         @method('DELETE')
                         <div>Are you sure you want to delete this Session?</div>
@@ -288,7 +291,7 @@
                         $('#deleteModel').modal('hide');
                     },
                     error: function(data) {
-                        console.log('Error:', data);
+                        printErrorMsg(data);
                     }
                 });
                 $('#deleteBtn').html('Confirm Delete');
@@ -305,6 +308,7 @@
             $.each(data.responseJSON.errors, function(key, value) {
                 $(".print-error-msg").find("ul").append('<li>' + value[0] + '</li>');
             });
+            $(".print-error-msg").find("ul").append('<li>' + data.responseJSON.error + '</li>');
         }
     </script>
 @endsection

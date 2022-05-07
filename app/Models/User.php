@@ -14,7 +14,7 @@ use Cog\Laravel\Ban\Traits\Bannable;
 
 
 
-class User extends Authenticatable implements BannableContract {
+class User extends Authenticatable implements BannableContract, MustVerifyEmail {
     use Bannable;
     use HasApiTokens, HasFactory, Notifiable;
     use HasRoles;
@@ -34,6 +34,8 @@ class User extends Authenticatable implements BannableContract {
         'manageable_type',
         'gender',
         'date_of_birth',
+        'last_login',
+        'banned_at',
     ];
 
     /**
@@ -44,6 +46,7 @@ class User extends Authenticatable implements BannableContract {
     protected $hidden = [
         'password',
         'remember_token',
+        'pivot',
     ];
 
     /**

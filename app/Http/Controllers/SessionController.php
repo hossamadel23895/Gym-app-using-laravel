@@ -188,6 +188,12 @@ class SessionController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(StoreSessionRequest $request, $session_id) {
+        $session = Session::find($session_id);
+        if ($session->users()->exists()) {
+            return response()->json([
+                'error' => 'Cant modify a Session that has users.'
+            ], 403);
+        };
 
         DB::transaction(function () use ($request, $session_id) {
             $session = Session::find($session_id);
@@ -228,6 +234,12 @@ class SessionController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy($session_id) {
+        $session = Session::find($session_id);
+        if ($session->users()->exists()) {
+            return response()->json([
+                'error' => 'Cant delete Session that has users, please delete related users first to proceed.'
+            ], 403);
+        };
         Session::find($session_id)->delete();
         session_user::where('session_id', $session_id)->delete();
         return response()->json(['success' => 'Session deleted successfully.']);
@@ -241,6 +253,43 @@ class SessionController extends Controller {
         }
         $attendedSessions = session_user::where('user_id', $user_id)->count();
         $remainingSessions = $totalSessions - $attendedSessions;
-        return response()->json(['RemainingSessions' => $remainingSessions]);
+        return response()->json(['remainingSessions' => $remainingSessions, 'totalSessions' => $totalSessions]);
+    }
+
+
+    public function calculate_attendance(Request $request, $user_id) {
+        $sessions_name = User::find($user_id)->sessions()->select('name')->orderBy('name')->get();
+        $gym_id = Purchase::select('gym_id')->where('sellable_id', $user_id)->first();
+        $gym_name = Gym::select('name')->where('id', $gym_id->gym_id)->get();
+        $dates = session_user::select('attendance_date', 'attendance_time')->where('user_id', $user_id)->get();
+        return response()->json(['training Sessions name' => $sessions_name, 'gym name' => $gym_name, 'attendance date and time' => $dates]);
+    }
+
+
+    public function attend_session(Request $request, $user_id) {
+        $Sessions = $this->calculate_remaining($request, $user_id)->original;
+        $session = Session::query()->where('id', $request->session_id)->first();
+        $sessions_id = $request->session_id;
+        $remainingSessions = $Sessions['remainingSessions'];
+        $date = $request->attendance_date;
+        $time = $request->attendance_time;
+        if ($remainingSessions == 0) {
+            return  response()->json([
+                'message' => 'you need to buy training sessions in order to attend'
+            ]);
+        }
+
+        if ($date !== Carbon::now()->format('Y-m-d')) {
+            return  response()->json([
+                'message' => 'it is not allowed to attend '
+            ]);
+        }
+        Session_user::create([
+            'attendance_date' => $date,
+            'attendance_time' => $time,
+            'session_id' => $sessions_id,
+            'user_id' => $user_id,
+        ]);
+        return response()->json(['message' => 'success']);
     }
 }

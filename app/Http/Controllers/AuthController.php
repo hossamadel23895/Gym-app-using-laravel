@@ -26,16 +26,17 @@ class AuthController extends Controller {
         if ($request->hasFile('avatar_url')) {
             $image_name = 'avatar_url-' . time() . '.' . $request->avatar_url->extension();
             $validatedData['avatar_url'] = $image_name;
-            $request->avatar_url->move(public_path('/uploads/profile_images'), $image_name);
+            $request->avatar_url->move(public_path('/storage/'), $image_name);
         }
         $user = User::create($validatedData);
         $user->assignRole('member');
 
-        event(new Registered($user));
+        $event = event(new Registered($user));
+
 
         $accessToken = $user->createToken('MyApp')->plainTextToken;
 
-        return response(['user' => $user, 'access_token' => $accessToken]);
+        return response(['user' => $user, 'access_token' => $accessToken, 'event' => $event]);
     }
 
     public function login(Request $request) {

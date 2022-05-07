@@ -193,9 +193,7 @@
                         $('#deleteModel').modal('hide');
                     },
                     error: function(data) {
-                        $(".print-error-msg").find("ul").html('');
-                        $(".print-error-msg").css('display', 'block');
-                        $(".print-error-msg").find("ul").append('<li>' + data.responseJSON.error + '</li>');
+                        printErrorMsg(data);
                     }
                 });
                 $('#deleteBtn').html('Confirm Delete');
@@ -212,6 +210,7 @@
             $.each(data.responseJSON.errors, function(key, value) {
                 $(".print-error-msg").find("ul").append('<li>' + value[0] + '</li>');
             });
+            $(".print-error-msg").find("ul").append('<li>' + data.responseJSON.error + '</li>');
         }
     </script>
 @endsection

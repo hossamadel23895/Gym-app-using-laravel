@@ -48,13 +48,13 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 
-// Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
-// Route::get('/password/reset', [ResetPasswordController::class, 'reset']);
+Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail']);
+Route::get('/password/reset', [ResetPasswordController::class, 'reset']);
 
 Route::get('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
-Route::get('/email/verify/{id}', [VerificationController::class, 'v
-erify'])->name('verification.verify');
+Route::get('/email/verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
 
 Route::post('/profile/update-profile', [ProfileController::class, 'update_profile'])->name('update.profile')->middleware('auth:sanctum');
-Route::get('/remainingSession/{user_id}', [SessionController::class, 'calculate_remaining'])->name('session.remaining');
-Route::get('/test', [PurchaseController::class, 'test'])->middleware('auth:sanctum');
+Route::get('/training_sessions/{user_id}', [SessionController::class, 'calculate_remaining'])->name('session.remaining')->middleware('auth:sanctum');
+Route::get('/attendance_history/{user_id}', [SessionController::class, 'calculate_attendance'])->name('session.attendance')->middleware('auth:sanctum');
+Route::post('/training_sessions/{id}/attend', [SessionController::class, 'attend_session'])->middleware('auth:sanctum');
