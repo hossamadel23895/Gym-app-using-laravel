@@ -11,8 +11,10 @@ class Gym extends Model {
     protected $fillable = [
         'name',
         'cover_url',
-        'starts_at',
-        'finishes_at',
+        'has_gyms_type',
+        'has_gyms_id',
+        'creatable_type',
+        'creatable_id',
     ];
 
     public function users() {

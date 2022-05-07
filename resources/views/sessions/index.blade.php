@@ -13,7 +13,7 @@
                 <th scope="col">Session Name</th>
                 <th scope="col">Day</th>
                 <th scope="col">Starts At</th>
-                <th scope="col">Finishes At</th>
+                <th scope="col">Ends At</th>
                 <th scope="col">Gym</th>
                 <th scope="col">City</th>
                 <th scope="col">Coaches</th>

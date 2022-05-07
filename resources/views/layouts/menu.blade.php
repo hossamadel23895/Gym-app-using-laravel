@@ -33,12 +33,20 @@
     @endcan
 </li>
 
-
 <li class="nav-item">
     @can('CRUD_members')
         <a href="{{ route('members.index') }}" class="nav-link {{ Request::is('members') ? 'active' : '' }}">
             <i class="nav-icon fas fa-dashboard"></i>
             <p>Members</p>
+        </a>
+    @endcan
+</li>
+
+<li class="nav-item">
+    @can('CRUD_cities')
+        <a href="{{ route('cities.index') }}" class="nav-link {{ Request::is('cities') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-dashboard"></i>
+            <p>Cities</p>
         </a>
     @endcan
 </li>

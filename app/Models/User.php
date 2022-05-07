@@ -14,8 +14,7 @@ use Cog\Laravel\Ban\Traits\Bannable;
 
 
 
-class User extends Authenticatable implements BannableContract
-{
+class User extends Authenticatable implements BannableContract {
     use Bannable;
     use HasApiTokens, HasFactory, Notifiable;
     use HasRoles;

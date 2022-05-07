@@ -206,11 +206,9 @@
                 $.ajax({
                     url: url,
                     type: "POST",
-                    // dataType: 'json',
                     processData: false,
                     contentType: false,
                     cache: false,
-                    // enctype: 'multipart/form-data',
                     data: myFormData,
                     success: function(data) {
                         if ($.isEmptyObject(data.error)) {

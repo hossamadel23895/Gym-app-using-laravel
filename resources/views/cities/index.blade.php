@@ -2,20 +2,17 @@
 
 @section('content')
     <div class="container-fluid">
-        <h1 class="text-black-50 text-center"> Members </h1>
+        <h1 class="text-black-50 text-center"> Cities </h1>
     </div>
     <div class="d-flex justify-content-end mb-3">
-        <a class="btn btn-success" href="javascript:void(0)" id="createNewUser"> Add New User</a>
+        <a class="btn btn-success" href="javascript:void(0)" id="createNewCity"> Add New City</a>
     </div>
-    <table id="membersTable" class="table table-bordered mt-4">
+    <table id="citiesTable" class="table table-bordered mt-4">
         <thead>
             <tr>
-                <th scope="col">Avatar</th>
+
                 <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">National ID</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Date Of Birth</th>
+                <th scope="col">Gyms</th>
                 <th scope="col" style="width: 200px">Actions</th>
             </tr>
         </thead>
@@ -29,7 +26,7 @@
                     <h4 class="modal-title" id="modelHeading"></h4>
                 </div>
                 <div class="modal-body">
-                    <form method="post" id="userForm" name="userForm" class="form-horizontal" enctype="multipart/form-data">
+                    <form method="post" id="cityForm" name="cityForm" class="form-horizontal" enctype="multipart/form-data">
                         <div class="alert alert-danger print-error-msg" style="display:none">
                             <ul></ul>
                         </div>
@@ -41,47 +38,11 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">Email</label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email"
-                                    required="">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">National ID</label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" id="national_id" name="national_id"
-                                    placeholder="Enter National ID number" required="">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-12 control-label">Gender</label>
-                            <select id="genderSelect" class="col-sm-12">
-                                <option value="male">male</option>
-                                <option value="female">female</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">Date Of Birth</label>
-                            <div class="col-sm-12">
-                                <input type="date" class="form-control" id="date_of_birth" name="date_of_birth"
-                                    required="">
-                            </div>
-                        </div>
-
-                        <div class="form-group d-flex flex-column">
-                            <label for="name" class="col-sm-12 control-label">Upload Avatar photo (optional)</label>
-                            <input type="file" name="user_img" class="mb-3 mx-2" id="user_img">
-                        </div>
-
                         <div class="col-sm-offset-2 col-sm-10">
                             <button type="submit" class="btn btn-primary" id="saveBtn" value="create">Save changes
                             </button>
                         </div>
+
                     </form>
                 </div>
             </div>
@@ -97,9 +58,12 @@
                 </div>
                 <div class="modal-body">
                     <form method="post" id="deleteForm" name="deleteForm" class="form-horizontal">
+                        <div class="alert alert-danger print-error-msg" style="display:none">
+                            <ul></ul>
+                        </div>
                         @csrf
                         @method('DELETE')
-                        <div>Are you sure you want to delete this User?</div>
+                        <div>Are you sure you want to delete this City?</div>
                         <div>This action cannot be undone.</div>
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn btn-danger mx-1" id="deleteBtn" value="delete">Confirm Delete
@@ -114,7 +78,7 @@
     </div>
 
     <script>
-        var user_id = "";
+        var city_id = "";
 
         $(document).ready(function() {
             $.noConflict();
@@ -123,29 +87,14 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $('#membersTable').DataTable({
+            $('#citiesTable').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: '{{ route('members.index') }}',
+                ajax: '{{ route('cities.index') }}',
                 columns: [{
-                        data: 'avatar',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
                         data: 'name',
-                    },
-                    {
-                        data: 'email',
-                    },
-                    {
-                        data: 'national_id',
-                    },
-                    {
-                        data: 'gender',
-                    },
-                    {
-                        data: 'date_of_birth',
+                    }, {
+                        data: 'gyms',
                     },
                     {
                         data: 'action',
@@ -156,31 +105,26 @@
             });
 
             // Create button action.
-            $('#createNewUser').click(function() {
+            $('#createNewCity').click(function() {
                 $(".print-error-msg").css('display', 'none');
 
-                $('#saveBtn').val("create-user");
-                $('#userForm').trigger("reset");
-                $('#modelHeading').html("Add New User");
+                $('#saveBtn').val("create-city");
+                $('#cityForm').trigger("reset");
+                $('#modelHeading').html("Add New City");
                 $('#ajaxModel').modal('show');
             });
 
-            // Edit user button action.
-            $('body').on('click', '.editUser', function() {
+
+            // Edit city button action.
+            $('body').on('click', '.editCity', function() {
                 $(".print-error-msg").css('display', 'none');
-
-                user_id = $(this).data('id');
-                var name = $(this).parent().siblings()[1].innerHTML;
-                var email = $(this).parent().siblings()[2].innerHTML;
-                var national_id = $(this).parent().siblings()[3].innerHTML;
-
-                $.get("{{ route('members.index') }}" + '/' + user_id + '/edit', function(data) {
-                    $('#modelHeading').html("Edit User");
-                    $('#saveBtn').val("edit-user");
+                city_id = $(this).data('id');
+                var name = $(this).parent().siblings()[0].innerHTML;
+                $.get("{{ route('cities.index') }}" + '/' + city_id + '/edit', function(data) {
+                    $('#modelHeading').html("Edit City");
+                    $('#saveBtn').val("edit-city");
                     $('#ajaxModel').modal('show');
                     $('#name').val(name);
-                    $('#email').val(email);
-                    $('#national_id').val(national_id);
                 })
             });
 
@@ -188,19 +132,14 @@
             $('#saveBtn').click(function(e) {
                 e.preventDefault();
                 $(this).html('Sending..');
-                var request_is_create = $('#modelHeading').html() == "Add New User";
-                var url = request_is_create ? "/members" : "/members/" + user_id;
+                var request_is_create = $('#modelHeading').html() == "Add New City";
+                var url = request_is_create ? "/cities" : "/cities/" + city_id;
                 var method = request_is_create ? "POST" : "PUT";
                 var myFormData = new FormData();
                 myFormData.append('_method', method);
-                myFormData.append('user_id', user_id);
+                myFormData.append('city_id', city_id);
                 myFormData.append('name', $('#name').val());
-                myFormData.append('email', $('#email').val());
-                myFormData.append('password', $('#password').val());
-                myFormData.append('national_id', $('#national_id').val());
-                myFormData.append('gender', $('#genderSelect').find(":selected").val());
-                myFormData.append('date_of_birth', $('#date_of_birth').val());
-                myFormData.append('user_img', $('#user_img')[0].files[0]);
+
 
                 $.ajax({
                     url: url,
@@ -211,9 +150,9 @@
                     data: myFormData,
                     success: function(data) {
                         if ($.isEmptyObject(data.error)) {
-                            $('#userForm').trigger("reset");
+                            $('#cityForm').trigger("reset");
                             $('#ajaxModel').modal('hide');
-                            $('#membersTable').DataTable().ajax.reload();
+                            $('#citiesTable').DataTable().ajax.reload();
                         } else {
                             printErrorMsg(data.error);
                         }
@@ -227,8 +166,8 @@
 
 
             // Delete button action.
-            $('body').on('click', '.deleteUser', function() {
-                user_id = $(this).data('id');
+            $('body').on('click', '.deleteCity', function() {
+                city_id = $(this).data('id');
                 $('#deleteBtn').val("Delete");
                 $('#deleteForm').trigger("reset");
                 $('#deleteHeading').html("Delete confirmation");
@@ -238,22 +177,25 @@
             // Handling delete ajax request.
             $('#deleteBtn').click(function(e) {
                 e.preventDefault();
+                console.log("here");
                 $(this).html('Deleting..');
-                var url = "/members/" + user_id;
+                var url = "/cities/" + city_id;
                 $.ajax({
                     url: url,
                     data: {
                         "_token": "{{ csrf_token() }}",
-                        "user_id": user_id,
+                        "city_id": city_id,
                     },
                     type: "DELETE",
                     dataType: 'json',
                     success: function(data) {
-                        $('#membersTable').DataTable().ajax.reload();
+                        $('#citiesTable').DataTable().ajax.reload();
                         $('#deleteModel').modal('hide');
                     },
                     error: function(data) {
-                        console.log('Error:', data);
+                        $(".print-error-msg").find("ul").html('');
+                        $(".print-error-msg").css('display', 'block');
+                        $(".print-error-msg").find("ul").append('<li>' + data.responseJSON.error + '</li>');
                     }
                 });
                 $('#deleteBtn').html('Confirm Delete');

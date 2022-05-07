@@ -72,6 +72,8 @@ class MemberController extends Controller {
                 'password' => bcrypt($request->password),
                 'national_id' => $request->national_id,
                 'avatar_url' => $user_img_path,
+                'gender' => $request->gender,
+                'date_of_birth' => $request->date_of_birth,
             ],
         );
 
